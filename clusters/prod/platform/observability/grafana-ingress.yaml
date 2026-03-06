@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: observability
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-dns
+spec:
+  tls:
+    - hosts:
+        - grafana.mattmcguiness.com
+      secretName: grafana-tls
+  rules:
+    - host: grafana.mattmcguiness.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: observability-grafana
+                port:
+                  number: 80
